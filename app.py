@@ -1,4 +1,5 @@
 import base64
+import json
 
 import dash
 import dash_bootstrap_components as dbc
@@ -10,7 +11,6 @@ from functions import (
     calculate_cosine_all_v_all,
     calculate_L2_norm_all_v_all,
     make_and_cleanup_dataframe,
-    read_opus_data,
 )
 from html_functions import make_heatmap_from_distance_matrix
 
@@ -22,7 +22,7 @@ app = dash.Dash(
 
 upload_files_button = dcc.Upload(
     id="upload-data-multiple",
-    children=dbc.Button("Upload IR files", color="primary"),
+    children=dbc.Button("Upload UV Json files", color="primary"),
     multiple=True,
 )
 euc_cosine_radio = html.Div(
@@ -83,15 +83,16 @@ def convert_uploaded_files(list_of_contents, distance_metric, list_of_filenames)
         for content, filename in zip(list_of_contents, list_of_filenames):
             content_type, content_string = content.split(",")
             decoded = base64.b64decode(content_string)
-            x, y = read_opus_data(decoded)
-
-            df[filename] = y
+            j = json.loads(decoded)
+            df[filename] = j['intensities']['254'][:6000]
 
             # we just need one set of x_values that will be common across all files
             if x_values is None:
-                x_values = x
+                x_values = j['time'][:6000]
 
         clean_df = make_and_cleanup_dataframe(dataframe=df, columns=x_values)
+        print(clean_df.iloc[0:5, 0:5])
+
         if distance_metric == "euclidean":
             distance_matrix = calculate_L2_norm_all_v_all(clean_df)
         elif distance_metric == "cosine":
@@ -106,4 +107,4 @@ def convert_uploaded_files(list_of_contents, distance_metric, list_of_filenames)
 
 
 if __name__ == "__main__":
-    app.run_server(host="0.0.0.0")
+    app.run_server(host="0.0.0.0", debug=True)

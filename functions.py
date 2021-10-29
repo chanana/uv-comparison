@@ -1,24 +1,21 @@
 # functions.py contains functions that don't return html
-from brukeropusreader.opus_parser import parse_data, parse_meta
 import pandas as pd
 import numpy as np
 
 
-def read_opus_data(opus_bytes):
-    meta_data = parse_meta(opus_bytes)
-    opus_data = parse_data(opus_bytes, meta_data)
-    x = [round(i) for i in opus_data.get_range("AB")[:-1]]
-    y = [round(i, 4) for i in opus_data["AB"][0 : len(x)]]
+# def read_uv_json(opus_bytes):
+#     meta_data = parse_meta(opus_bytes)
+#     opus_data = parse_data(opus_bytes, meta_data)
+#     x = [round(i) for i in opus_data.get_range("AB")[:-1]]
+#     y = [round(i, 4) for i in opus_data["AB"][0 : len(x)]]
 
-    return x, y
+#     return x, y
 
 
 def make_and_cleanup_dataframe(dataframe, columns):
     dataframe = dataframe.transpose()
     dataframe.columns = columns
-    dataframe = dataframe.round(decimals=4)
     dataframe.sort_index(inplace=True)
-    dataframe = dataframe[dataframe.columns[::-1]]
     return dataframe
 
 
