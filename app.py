@@ -44,12 +44,14 @@ download_button = html.Div(
 )
 buttons_and_selectors = dbc.Row(
     [
-        dbc.Col(upload_files_button, width=3),
+        dbc.Col(html.H1("UV Vis comparison tool"), width=5),
+        dbc.Col(upload_files_button, width=2),
         dbc.Col(euc_cosine_radio, width=3),
-        dbc.Col(download_button, width=3),
+        dbc.Col(download_button, width=2),
     ],
     align="center",
     justify="center",
+    class_name='mt-5'
 )
 
 figure = dbc.Row(dbc.Col(children=[dcc.Graph(id="L2-heatmap", figure={})]))
