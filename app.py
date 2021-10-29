@@ -91,7 +91,6 @@ def convert_uploaded_files(list_of_contents, distance_metric, list_of_filenames)
                 x_values = j['time'][:6000]
 
         clean_df = make_and_cleanup_dataframe(dataframe=df, columns=x_values)
-        print(clean_df.iloc[0:5, 0:5])
 
         if distance_metric == "euclidean":
             distance_matrix = calculate_L2_norm_all_v_all(clean_df)
